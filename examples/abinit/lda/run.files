@@ -1,0 +1,8 @@
+abinit.in
+abinit.out
+abinit_i
+abinit_o
+abinit_t
+./fe_pbe_v1.2_abinit.paw
+./o_pbe_v1.2_abinit.paw
+

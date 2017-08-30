@@ -1,0 +1,27 @@
+DFTtoolbox variable requirements
+
+1. QE:
+file name: 
+* pw.scf.in > pw.scf.out
+* pw.bands.in > pw.bands.out
+* projwfc.fat.in > projwfc.fat.out
+* projwfc.dos.in > projwfc.dos.out
+
+variable name:
+* pw.scf.in:
+  prefix='pwscf'
+* pw.bands.in:
+  prefix='pwscf'
+  verbosity = 'high'
+* projwfc.fat.in:
+  prefix='pwscf'
+  filproj = 'fatband'
+* projwfc.dos.in:
+  prefix='pwscf'
+  filproj = 'pdos'
+  
+2. Abinit:
+* pdos:
+  prtdos4 3           # calculate projected dos
+  prtdosm4 2          # print pdos to m-component
+  pawprtdos4 2        # calculate three contributions respectively

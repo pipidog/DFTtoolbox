@@ -1,0 +1,71 @@
+
+#------------------------------------------------------------------------
+# This is an XCRYSDEN k-Path File. Here you will find the
+# data about the selected special k-point coordinates !!!
+#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------
+# WARNING: 
+#   special k-point coordinates in this file are in "CRYSTAL" 
+#   (i.e. fractional) coordinates, which are expressed either 
+#   in the basis of "primitive" or "conventional" reciprocal 
+#   lattice vectors. See below !!!
+#------------------------------------------------------------------------
+
+
+k-point coordinates are expressed in the basis: PRIMITIVE
+
+#
+# #-------------------------------------#
+# # INTEGER FORM of k-point COORDINATES #
+# #-------------------------------------#
+#
+# some programs want an integer form of k-point coordinates,
+# this looks like:
+#
+# k-point == (M*kx, M*ky, M*kz), where M is an integer multiplier
+#
+# Actual k-point coordinates are then calculated as:
+#
+# k-point == 1/M * (M*kx, M*ky, M*kz)
+#------------------------------------------------------------------------
+
+Multiplier M: 8
+
+Integer form of k-point coordinates (M*kx,M*ky,M*kz,label):
+  0    0    0     $\GAMMA$
+  4    4    0     X
+  4    6    2     W
+  3    6    3     K
+  0    0    0     $\GAMMA$
+  4    4    4     L
+  5    5    2     A
+  4    6    2     W
+  4    4    4     L
+  3    6    3     K
+
+
+#
+# #----------------------------------#
+# # REAL FORM of k-point COORDINATES #
+# #----------------------------------#
+#
+    
+Real form of k-point coordinates (kx,ky,kz,label):
+   0.0000000000     0.0000000000     0.0000000000     $\GAMMA$
+   0.5000000000     0.5000000000     0.0000000000     X
+   0.5000000000     0.7500000000     0.2500000000     W
+   0.3750000000     0.7500000000     0.3750000000     K
+   0.0000000000     0.0000000000     0.0000000000     $\GAMMA$
+   0.5000000000     0.5000000000     0.5000000000     L
+   0.6250000000     0.6250000000     0.2500000000     A
+   0.5000000000     0.7500000000     0.2500000000     W
+   0.5000000000     0.5000000000     0.5000000000     L
+   0.3750000000     0.7500000000     0.3750000000     K
+
+#
+# #-------------#
+# # END of FILE #
+# #-------------#
+#
+    

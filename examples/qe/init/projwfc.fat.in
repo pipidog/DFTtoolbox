@@ -1,0 +1,6 @@
+&projwfc
+  outdir='./outdir'
+  prefix='pwscf'
+  lsym=.false.
+  filproj = 'fatband'
+/

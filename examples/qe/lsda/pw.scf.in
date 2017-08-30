@@ -1,0 +1,46 @@
+ &CONTROL
+                       title = 'FeO' ,
+                 calculation = 'scf' ,
+                restart_mode = 'from_scratch' ,
+                      outdir = './outdir',
+                  pseudo_dir = './' ,
+                      prefix = 'pwscf' ,
+                 max_seconds =  21000 ,
+                  wf_collect = .true. ,
+                   verbosity = 'high',
+ /
+ &SYSTEM
+                       ibrav = 0,
+                   celldm(1) = 1.89,
+                         nat = 2,
+                        ntyp = 2,
+                     ecutwfc = 30 ,
+                     ecutrho = 120 ,
+                 occupations = 'smearing' ,
+                     degauss = 0.02 ,
+                       nspin = 2,
+   starting_magnetization(1) = 1.0,
+                    noncolin = .false. ,
+                    lspinorb = .false. ,
+                  lda_plus_u = .false.,
+             lda_plus_u_kind = 0,
+                Hubbard_U(1) = 0,
+ /
+ &ELECTRONS
+            electron_maxstep = 100,
+                    conv_thr = 1.D-5 ,
+                 mixing_beta = 0.7 ,
+             diagonalization = 'david' ,
+ /
+CELL_PARAMETERS alat
+      2.15845239   2.15845239   0.00000000
+      2.15845239   0.00000000   2.15845239
+      0.00000000   2.15845239   2.15845239
+ATOMIC_SPECIES
+    Fe     1.000   Fe.pz-spn-kjpaw_psl.0.2.1.UPF
+     O     1.000   O.pz-n-kjpaw_psl.0.1.UPF
+ATOMIC_POSITIONS crystal
+Fe    0.00000000   0.00000000   0.00000000 0 0 0
+ O   -0.50000000   0.50000000   0.50000000 0 0 0
+K_POINTS automatic
+8 8 8 1 1 1

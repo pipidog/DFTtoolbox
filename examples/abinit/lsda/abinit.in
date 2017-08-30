@@ -1,0 +1,118 @@
+# << Project: FeO >>
+
+ndtset 4             # how many running data set
+jdtset 1 2 3 4       # which dataset will be run
+AUTOPARAL 1
+
+#Definition of the unit cell =======================
+chkprim 0   # warnin on non-primitive cell
+nsym 0      # auto symmetry finder
+ntypat 2
+natom 2
+znucl 26 8 
+typat 
+  1   2 
+acell 3*1.0 angstrom
+rprim
+  2.15845239   0.00000000   2.15845239
+  2.15845239   2.15845239   0.00000000
+  0.00000000   2.15845239   2.15845239
+xred
+  0.00000000   0.00000000   0.00000000
+  0.50000000  -0.50000000   0.50000000
+
+#Definition of spin ==================================
+nspinor 1     # spinor
+nspden 2      # spin density
+nsppol 2      # spin polarizaton
+spinat        # initial moments
+  0   0   1  #   1
+  0   0   0  #   2
+
+# spin-orbit
+pawspnorb 0   # turn on paw SOC
+spnorbscl 1.0 # scaling of SOC
+
+#Definition of plane waves ==========================
+ecut  15 #18.5         # Maximal kinetic energy cut-off, in Hartree
+pawecutdg 45 #55.0     # ecut for paw double grid
+occopt 7           # smearing of the energy levels
+diemac 1.0D+6       # large value for metal
+nband 40
+
+# DS1: SCF calculation ==============================
+#kptrlen1 30
+#prtkpt1 1
+kptopt1 4           # kpt generation, if SOC, no TRS allowed
+kptrlatt1
+ 4  4  -4  
+-4  4  -4 
+-4  4   4 
+nshiftk1 1          # number of k shift vector
+shiftk1             # k shift vector
+0.5 0.5 0.5
+
+nstep1 100         # Maximal number of SCF cycles
+tolvrs1 1.0d-3     # criterion on total energy difference
+
+
+#DS2: Band Calculation ==========================
+iscf2 -2           # -2: conventional nscf calculation
+getden2 1          # get den from n-th dataset
+tolwfr2 1.0d-8     # nscf's only acceptable convergence criterion
+kptopt2 -9
+ndivk2 15 7 5 15 13 9 5 10 9 
+kptbounds2
+  0.00000000    0.00000000    0.00000000  
+  0.50000000    0.50000000    0.00000000  
+  0.50000000    0.75000000    0.25000000  
+  0.37500000    0.75000000    0.37500000  
+  0.00000000    0.00000000    0.00000000  
+  0.50000000    0.50000000    0.50000000  
+  0.62500000    0.62500000    0.25000000  
+  0.50000000    0.75000000    0.25000000  
+  0.50000000    0.50000000    0.50000000  
+  0.37500000    0.75000000    0.37500000
+
+#DS3: fat band ===========================
+iscf3 -2           # conventional nscf calculation
+getden3 1          # get den from n-th dataset
+tolwfr3 1.0d-8     # nscf's only acceptable convergence criterion
+pawfatbnd3 2       # print fat band infomation up to (L,M)
+natsph3 2         # total projected atom
+iatsph3            # indexs of projected atoms 
+ 1  2    
+kptopt3 -9
+ndivk3 15 7 5 15 13 9 5 10 9 
+kptbounds3
+  0.00000000    0.00000000    0.00000000  
+  0.50000000    0.50000000    0.00000000  
+  0.50000000    0.75000000    0.25000000  
+  0.37500000    0.75000000    0.37500000  
+  0.00000000    0.00000000    0.00000000  
+  0.50000000    0.50000000    0.50000000  
+  0.62500000    0.62500000    0.25000000  
+  0.50000000    0.75000000    0.25000000  
+  0.50000000    0.50000000    0.50000000  
+  0.37500000    0.75000000    0.37500000
+
+#DS4: PDOS ===============================
+iscf4 -3            # nscf run (use -3 if occopt~=3~7)
+tolwfr4 1.0d-8      # nscf's only acceptable convergence criterion
+getden4 1           # fetch dataset-1 density
+
+kptopt4 4           # kpt generation, if SOC, no TRS allowed
+kptrlatt4
+ 4  4  -4
+-4  4  -4
+-4  4   4
+nshiftk4 1          # number of k shift vector
+shiftk4             # k shift vector
+0.5 0.5 0.5
+
+prtdos4 3           # calculate projected dos
+prtdosm4 0          # print pdos to m-component
+pawprtdos4 2        # calculate three contributions respectively
+natsph4 2          # total projected atom
+iatsph4            # indexs of projected atoms
+ 1  2  

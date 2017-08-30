@@ -1,0 +1,82 @@
+# << title: FeO / task: relax >>
+
+# System ========================================
+ndtset 2         # of running dataset
+jdtset 1 2       # index of running dataset
+autoparal 0      # level of prallal
+pawovlp 10       # allow paw overlap,>15 dagnerous!
+
+# Strucure ======================================
+chkprim 0   # warnin on non-primitive cell
+nsym 0      # auto symmetry finder
+ntypat 2    # number of species
+znucl       # Z of each species
+  26 8 
+natom 2    # number of atoms
+typat       # species of each atom
+  1   2 
+acell 3*1.0 angstrom    # lattice constant
+rprim                   # lattice vectors
+    2.15845239   0.00000000   2.15845239
+    2.15845239   2.15845239   0.00000000
+    0.00000000   2.15845239   2.15845239
+xred                    # atom in reduced coordinates
+    0.00000000   0.00000000   0.00000000  #  Fe (  1)
+    0.50000000   0.50000000   0.50000000  #   O (  2)
+
+# Plane Waves ================================
+ecut 16.5      # energy cut in Ha
+pawecutdg 41.5 # ecut double grid, suggest: 2.5~3.0 ecut
+occopt 7       # occupation, 7 should work for all
+diemac 1e+6    # dielectric const, 1e+6 should work for all
+tolvrs 1e-3    # potential convergence for scf
+
+# Kmesh ======================================
+# -----
+# Abinit requires kmesh to satisify the symmetry. The simplest
+# way to do it is to let Abinit automatically look for kmesh by
+# constructing a supercell in real space. To do it, first run
+# kptrlen & prtkpt to search for best supercell kptrlatt.
+# put the best values of kptrlatt, nshiftk, shiftk from
+# abinit.out. erase kptrlen & prtkpt. Then run scf with correct
+# kptrlatt, nshiftk, shiftk. 
+# -----
+
+# run it frist to obtain kptrlatt, then comment out
+kptrlen1 50          # search for best kptrlatt
+prtkpt1 1
+
+# uncomment the following part after kptrlatt is obtained
+#kptrlatt1            # kmesh in real space (obtained by kptrlen)
+#   0  0  0
+#   0  0  0
+#   0  0  0
+#nshiftk 1       # how many k-shift
+#shiftk           # shift vector
+#    0.0 0.0 0.0
+
+# DS1: In-Cell Relax =============================
+-----
+# It is strongly recommend to use a two-step optimization to
+# make system convergent easier. First keep the cell fixed
+# and relax atoms within the cell. Second, relax the cell using
+# optcell=1 (lattice constants only) or, more aggresively,
+# optcell=2 (relax the whole system).
+-----
+
+optcell1 0       # 0: cell fixed, 1:acell only, 2:full relax
+ionmov1 3        # BFGS algorithm, work for must cases
+ntime1 30        # max optimization steps
+tolmxf1 1e-4     # force convergence
+ecutsm1 0.5      # total energy smooth, enlarge if change sharply
+dilatmx1 1.0     # estimated lattice expansion, enlarge if charge sharply
+
+# DS2: Cell Relax =================================
+getcell2 1       # get cell from n-th dataset
+getxred2 1       # get xred from n-th dataset
+optcell2 1       # 0: cell fixed, 1:acell only, 2:full relax
+ionmov2 3        # BFGS algorithm, work for must cases
+ntime2 30        # max optimization steps
+tolmxf2 1e-4     # force convergence
+ecutsm2 0.5      # total energy smooth, enlarge if change sharply
+dilatmx2 1.1     # estimated lattice expansion, enlarge if expand sharply

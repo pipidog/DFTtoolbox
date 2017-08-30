@@ -1,0 +1,89 @@
+! << title:FeO / task: ground state>>
+
+! system ===================
+tasks
+   0              ! scf
+  10              ! pdos
+  20              ! band
+  21              ! fatbnd
+
+sppath          ! species file path
+  '/YOUR-ELK-ROOT/species/'
+
+xctype          ! exchange functional (3:LSDA, 20:PBE, 22:PBESOL)
+  20 0 0
+
+! structure ===============
+primcell       ! auto find primitive cell for calculation
+  .true.
+
+scale          ! lattice const
+  1.89
+
+avec           ! lattice vectors
+    2.15845239   2.15845239   0.00000000
+    2.15845239   0.00000000   2.15845239
+    0.00000000   2.15845239   2.15845239
+
+atoms          ! atom infomation
+  2          :nspecies
+  Fe.in      :spfname
+   1         :natoms; atposl, bfcmt below
+  0.00000000   0.00000000   0.00000000   0.0   0.0   0.0
+   O.in      :spfname
+   1         :natoms; atposl, bfcmt below
+ -0.50000000   0.50000000   0.50000000   0.0   0.0   0.0
+
+! spin ================
+spinpol        ! spin polarization
+  .true.
+reducebf       ! reduction of MT b-field in each iteration
+  0.5
+cmagz          ! fix moment in z-axis
+  .true.
+spinorb        ! spin-orbit coupling
+  .true.
+
+socscf         ! scaling of soc
+   1.0
+
+! DFT+U ================
+! hints:
+! dftu => 0:off, 1:FLL, 2:AMF, FLL should work for most cases
+! inpdftu => keep 1 for using U and J as input
+! is => species number, l => orbital, U, J => in Ha
+
+dft+u
+  1   1             : dftu, inpdftu
+  0   0  0.0  0.0   : is, l, U, J
+
+! kmesh =================
+ngridk       ! BZ grid
+  15 15 15 
+vkloff       ! shift of grid
+  0.5 0.5 0.5
+
+nempty       ! add few empty states to imporve convergence
+  10
+
+! convergence ===========
+epsengy      ! energy criterion (default:1e-4)
+  1e-4
+
+maxscl       ! max scf loop
+  100
+
+! band structure ========
+! band path: $GAMMA$-X-W-K-$GAMMA$-L-K.7-W-L-K-
+plot1d
+    10  177 : nvp1d, npp1d 
+  0.00000000   0.00000000   0.00000000 :vlv1d
+  0.50000000   0.50000000   0.00000000
+  0.50000000   0.75000000   0.25000000
+  0.37500000   0.75000000   0.37500000
+  0.00000000   0.00000000   0.00000000
+  0.50000000   0.50000000   0.50000000
+  0.62500000   0.62500000   0.25000000
+  0.50000000   0.75000000   0.25000000
+  0.50000000   0.50000000   0.50000000
+  0.37500000   0.75000000   0.37500000
