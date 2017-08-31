@@ -66,16 +66,17 @@ In addition, if you want to use your own tools to plot the results,
 the output .npz file can also let you load the data in numpy standard format
 immediately, so you can postprocess your data in Python framework easily.
 
-# Is there a quick tutorial?
-Yes, check (/DFTtoolbox/examples/). There is a simple example FeO. I believe 
+# Is there a quick tutorials?
+Yes, check (/examples/). There is a simple example FeO. I believe 
 anyone can learn how to use it in a few minutes. You will find it only needs 
 very few necesary input variabless to initialize or postprocess a DFT calculation.  
+Also, in /template/ there are template files for your to use.
 
 # Installation
 - from the tarball:
 Just download the tarball. Unzip it and put it anywhere you want. 
-Set your PYTHONPATH to its parent folder or specify the full path in all template files
-when you call DFTtoolbox. Then you are all set. 
+The module is located in /DFTtoolbox/. Import this module in your template files. 
+
 - from pipy:
 pip install DFTtoolbox
 

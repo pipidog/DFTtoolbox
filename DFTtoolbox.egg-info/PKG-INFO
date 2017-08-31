@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: DFTtoolbox
+Version: 1.0
+Summary: A toolbox to initialize or postpocess several codes
+Home-page: https://github.com/pipidog/DFTtoolbox
+Author: pipidog
+Author-email: pipidog@gmail.com
+License: MIT
+Download-URL: https://github.com/pipidog/DFTtoolbox/archive/v1.0.tar.gz
+Description: UNKNOWN
+Keywords: density-functional-theory,qantum-espresso,elk,abinit
+Platform: UNKNOWN
+Classifier: Topic :: Scientific/Engineering :: Physics
