@@ -76,9 +76,11 @@ Also, in /template/ there are template files for your to use.
 - from the tarball:
 Just download the tarball. Unzip it and put it anywhere you want. Go to the 
 folder, type:
+
 python setup install
 
 - from pipy:
+
 pip install DFTtoolbox
 
 # Figures Demo
