@@ -74,8 +74,9 @@ Also, in /template/ there are template files for your to use.
 
 # Installation
 - from the tarball:
-Just download the tarball. Unzip it and put it anywhere you want. 
-The module is located in /DFTtoolbox/. Import this module in your template files. 
+Just download the tarball. Unzip it and put it anywhere you want. Go to the 
+folder, type:
+python setup install
 
 - from pipy:
 pip install DFTtoolbox
