@@ -150,13 +150,14 @@ class dftpp:
                     sys.exit()
                 return s
                 
-            for grp in state_grp:
+            for n, grp in enumerate(state_grp):
+                state_subgrp=[]
                 for subgrp in grp:
-                    state_grp_new.append(state_translator(subgrp))
-
+                    state_subgrp.extend(state_translator(subgrp))
+                state_grp_new.append(state_subgrp)
+                
         elif type(state_grp[0][0])==int:
                 state_grp_new=state_grp
-                
         return state_grp_new
             
     def band_plot(self,spin,Ek,Ef,kdiv='default',klabel='default',Ebound='default',\
@@ -206,7 +207,6 @@ class dftpp:
             
     def fatband_plot(self,Ek,Ek_weight,Ef,state_info,state_grp,kdiv='default',klabel='default'\
     ,Ebound='default',ini_fig_num=1,marker_size=30,colorcode='b',fontsize=18,savefig_dir='default'):
-
         # give input parameter default values
         if (kdiv is 'default'):
             kdiv=[0,Ek.shape[0]-1]

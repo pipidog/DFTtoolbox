@@ -1,4 +1,3 @@
-README.txt
 setup.cfg
 setup.py
 DFTtoolbox/__init__.py
@@ -10,4 +9,5 @@ DFTtoolbox/struct.py
 DFTtoolbox.egg-info/PKG-INFO
 DFTtoolbox.egg-info/SOURCES.txt
 DFTtoolbox.egg-info/dependency_links.txt
+DFTtoolbox.egg-info/requires.txt
 DFTtoolbox.egg-info/top_level.txt
