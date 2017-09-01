@@ -2,7 +2,7 @@ from DFTtoolbox.abinit import postproc
 import os
 
 # Parameters =======================================
-run_task=[3,4,5,6]
+run_task=[1,2,3,4,5,6]
 wkdir=os.path.dirname(os.path.realpath(__file__))
 dataset_ban=2
 dataset_fatban=3
