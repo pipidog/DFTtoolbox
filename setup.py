@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version='1.1'
+version='1.2'
 with open('C:/Users/pipidog/Dropbox/Code/DFTtoolbox/README.md') as file:
     long_description = file.read()
 
