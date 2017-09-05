@@ -1,2 +1,3 @@
 # v1.0: first release
-# v1.1: bug fixed, state_grp will not combine states. 
+# v1.1: bug fixed: state_grp will not combine states. 
+# v1.2: bug fixed: abinit coordinate error

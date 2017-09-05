@@ -62,17 +62,16 @@ class init(dftstr):
             file.write('! spin ================\n')
         if mag is 'on':
             file.write('spinpol        ! spin polarization\n') 
-            file.write('  .true.\n')
+            file.write('  .true.\n\n')
             file.write('reducebf       ! reduction of MT b-field in each iteration\n')
-            file.write('  0.5\n')
+            file.write('  0.5\n\n')
             file.write('cmagz          ! fix moment in z-axis\n')
-            file.write('  .true.\n') 
+            file.write('  .true.\n\n') 
         if soc is 'on':
             file.write('spinorb        ! spin-orbit coupling\n')
             file.write('  .true.\n\n')
             file.write('socscf         ! scaling of soc\n') 
-            file.write('   1.0\n')
-        file.write('\n')
+            file.write('   1.0\n\n')
         if (dftu is 'on'):           
             file.write('! DFT+U ================\n')
             file.write('! hints:\n')
@@ -84,7 +83,7 @@ class init(dftstr):
             file.write('  0   0  0.0  0.0   : is, l, U, J\n\n')
         file.write('! kmesh =================\n')
         file.write('ngridk       ! BZ grid\n  ')
-        [file.write('{0} '.format(int(np.round(45/la.norm(a_n))))) for a_n in a_vec]
+        [file.write('{0} \n'.format(int(np.round(45/la.norm(a_n))))) for a_n in a_vec]
         file.write('\n')
         file.write('vkloff       ! shift of grid\n')
         file.write('  0.5 0.5 0.5\n\n')

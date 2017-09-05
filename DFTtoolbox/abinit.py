@@ -33,7 +33,7 @@ class init(dftstr):
         spec=[]
         [spec.append(at_n) for at_n in atom if spec.count(at_n)==0]
         # -------------------------------------------------
-
+        print(sublat)
         # output input file for abinit
         file=open(self.wkdir+'abinit.in','w')
         file.write('# << title: {0} / task: ground state >>\n'.format(prefix))
@@ -65,7 +65,7 @@ class init(dftstr):
             file.write('  %12.8f %12.8f %12.8f\n' % tuple(a_vec[n,:].tolist()))       
         file.write('xred                    # atom in reduced coordinates\n')    
         for n in range(0,len(atom)):
-            file.write('  {0[0]:12.8f} {0[0]:12.8f} {0[0]:12.8f}  #  {1:>2s} ({2:>3d})\n'.\
+            file.write('  {0[0]:12.8f} {0[1]:12.8f} {0[2]:12.8f}  #  {1:>2s} ({2:>3d})\n'.\
                 format(sublat[n,:],ptable[atom[n]],(n+1)))
             #file.write('%12.8f %12.8f %12.8f\n' % tuple(sublat[n,:].tolist()))
         file.write('\n')
@@ -563,8 +563,7 @@ class postproc(dftpp):
             s['l']=int(label[3][-1])
             s['ml']=int(label[4][-2:])
             state_info.append('{label:2d} => {name:2s} ({num:3d} / {l} / {ml:+} / {ms:+})\n'.format(**s))
-        print(state_info)
-        print(np.array(flist))
+        
         # check whether size of the  calculation ==========
         if self.grep(flist,'_is2_')!=[]:
             spin=2
@@ -630,6 +629,7 @@ class postproc(dftpp):
         with open(self.wkdir+'fatband-DS'+str(dataset)+'-state.dat','w') as file:
             file.write(' # => at (atn / l / ml / ms)\n')
             file.writelines(state_info)
+        print(np.array(state_info))
         
     def fatband_plot(self,dataset,state_grp,kdiv='default',klabel='default',\
     Ebound='default',ini_fig_num=1,marker_size=30,colorcode='b',fontsize=18):
