@@ -35,12 +35,33 @@ atoms          ! atom infomation
  -0.50000000   0.50000000   0.50000000   0.0   0.0   0.0
 
 ! spin ================
+! < Basic Parameters >
+
 spinpol        ! spin polarization
   .true.
+
 reducebf       ! reduction of MT b-field in each iteration
   0.5
-cmagz          ! fix moment in z-axis
+
+cmagz          ! fix collinear moment in z-axis to speed calculation
   .true.
+
+! < Moment constraint >
+
+fsmtype        ! 0:no, 1/-1:tot, 2/-2:MT, 3/-3:Both, negative means direction only
+   0
+
+taufsm         ! constraint parameter
+   0.01
+
+momfix         ! desired total moment 
+   0.0 0.0 0.0 
+
+mommtfix       ! desired MT moment (spec, at#, moment) add more lines if needed
+   0   0    0.0  0.0  0.0 : is, ia, mommtfix
+
+! < Spin Orbit >
+
 spinorb        ! spin-orbit coupling
   .true.
 
@@ -59,7 +80,10 @@ dft+u
 
 ! kmesh =================
 ngridk       ! BZ grid
-  15 15 15 
+  15 
+15 
+15 
+
 vkloff       ! shift of grid
   0.5 0.5 0.5
 
@@ -68,6 +92,9 @@ nempty       ! add few empty states to imporve convergence
 
 ! convergence ===========
 epsengy      ! energy criterion (default:1e-4)
+  1e-2
+
+epspot      ! KS potential criterion (default:1e-6)
   1e-4
 
 maxscl       ! max scf loop

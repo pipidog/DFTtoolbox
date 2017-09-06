@@ -24,6 +24,11 @@ class dftstr:
             sublat_xred[n,:]=prim_inv.dot(sublat_cart_n).transpose()
 
         return sublat_xred
+        
+    def xred2cart(self,sublat_red,prim):
+        sublat=np.zeros(sublat_red.shape)
+        for n, sublat_red_n in sublat_red:
+            sublat[n,:]=np.dot(sublat_red_n,prim)
     
     def recip_vec(self,a_vec):
         # generate the reciprocal lattice row vectros 
@@ -83,7 +88,7 @@ class dftstr:
             
         return at_name
         
-    def getxsf(self,wkdir,prefix,V_regulation='off'):
+    def getxsf(self,wkdir,prefix,coord='red'):
         if (wkdir[-1]!='/') & (wkdir[-1]!='\\'):
             wkdir+='/'
         # read prim vectors
@@ -111,7 +116,13 @@ class dftstr:
             sublat[n,:]=[float(pos_i) for pos_i in tmp[1:]]            
             
         # convert cartisian coordinate to reduced coordinates
-        sublat=self.cart2xred(sublat,a_vec)
+        if coord=='red':
+            sublat=self.cart2xred(sublat,a_vec)
+        elif coord=='cart':
+            pass
+        else:
+            print('Error: struct.dftstr.getxsf, coord={0} not defined!'.format(coord))
+            sys.exit()
 
         return atom, a_vec, sublat
         
@@ -132,6 +143,16 @@ class dftstr:
             kpath[n,:]=[float(kpt_i) for kpt_i in tmp[0:3]]
 
         return klabel, kpath
+        
+    def printxsf(self,wkdir,atom,a_vec,sublat,prefix='printxsf'):
+        with open(wkdir+prefix+'.xsf','w') as file:
+            file.write('CRYSTAL\n')
+            file.write('    PRIMVEC\n')
+            [file.write('     {0[0]:12.8f}  {0[1]:12.8f}  {0[2]:12.8f}\n'.format(a_vec_n)) for a_vec_n in a_vec]
+            file.write('    PRIMCOORD\n')
+            file.write('      {0}  1\n'.format(len(atom)))
+            [file.write('      {0:2s} {1[0]:12.8f} {1[1]:12.8f} {1[2]:12.8f}\n'.format(str(atom[n]),sublat[n]))\
+            for n in range(0,len(atom))]
         
     def str2input(self,form,atom,a_vec,sublat):
         ptable=self.ptable()
