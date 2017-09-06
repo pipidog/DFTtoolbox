@@ -14,7 +14,7 @@ class init(dftstr):
         # collecing all input infomation ----------------
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
-        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix,'on')
+        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         klabel, kpath=self.getkpf(self.wkdir,prefix) 
 
         # check if V<0, if yes, swap a1 and a2
@@ -33,7 +33,6 @@ class init(dftstr):
         spec=[]
         [spec.append(at_n) for at_n in atom if spec.count(at_n)==0]
         # -------------------------------------------------
-        print(sublat)
         # output input file for abinit
         file=open(self.wkdir+'abinit.in','w')
         file.write('# << title: {0} / task: ground state >>\n'.format(prefix))

@@ -1,3 +1,6 @@
 # v1.0: first release
-# v1.1: bug fixed: state_grp will not combine states. 
-# v1.2: bug fixed: abinit coordinate error
+# v1.1: bug: state_grp will not combine states. 
+# v1.2: bug: abinit coordinate error
+# v1.3: bug: struct.getxst and related issues
+        add: printxsf
+        add: FSM in elk.py

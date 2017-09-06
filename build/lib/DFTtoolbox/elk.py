@@ -14,7 +14,7 @@ class init(dftstr):
         # collecing all input infomation ----------------
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
-        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix,'on')
+        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         klabel, kpath=self.getkpf(self.wkdir,prefix) 
         kdiv=self.kdiv(a_vec,kpath,kdense)
         if type(atom[0])==str:
@@ -61,17 +61,28 @@ class init(dftstr):
         if (mag is 'on') or (soc is 'on'):
             file.write('! spin ================\n')
         if mag is 'on':
+            file.write('! < Basic Parameters >\n\n')
             file.write('spinpol        ! spin polarization\n') 
             file.write('  .true.\n\n')
             file.write('reducebf       ! reduction of MT b-field in each iteration\n')
             file.write('  0.5\n\n')
-            file.write('cmagz          ! fix moment in z-axis\n')
+            file.write('cmagz          ! fix collinear moment in z-axis to speed calculation\n')
             file.write('  .true.\n\n') 
+            file.write('! < Moment constraint >\n\n')
+            file.write('fsmtype        ! 0:no, 1/-1:tot, 2/-2:MT, 3/-3:Both, negative means direction only\n')
+            file.write('   0\n\n')
+            file.write('taufsm         ! constraint parameter\n')
+            file.write('   0.01\n\n')
+            file.write('momfix         ! desired total moment \n')
+            file.write('   0.0 0.0 0.0 \n\n')
+            file.write('mommtfix       ! desired MT moment (spec, at#, moment) add more lines if needed\n')
+            file.write('   0   0    0.0  0.0  0.0 : is, ia, mommtfix\n\n')  
         if soc is 'on':
+            file.write('! < Spin Orbit >\n\n')
             file.write('spinorb        ! spin-orbit coupling\n')
             file.write('  .true.\n\n')
             file.write('socscf         ! scaling of soc\n') 
-            file.write('   1.0\n\n')
+            file.write('   1.0\n\n')   
         if (dftu is 'on'):           
             file.write('! DFT+U ================\n')
             file.write('! hints:\n')
@@ -83,14 +94,16 @@ class init(dftstr):
             file.write('  0   0  0.0  0.0   : is, l, U, J\n\n')
         file.write('! kmesh =================\n')
         file.write('ngridk       ! BZ grid\n  ')
-        [file.write('{0} \n'.format(int(np.round(45/la.norm(a_n))))) for a_n in a_vec]
-        file.write('\n')
+        [file.write('{0} '.format(int(np.round(45/la.norm(a_n))))) for a_n in a_vec]
+        file.write('\n\n')
         file.write('vkloff       ! shift of grid\n')
         file.write('  0.5 0.5 0.5\n\n')
         file.write('nempty       ! add few empty states to imporve convergence\n')
         file.write('  10\n\n')
         file.write('! convergence ===========\n')
         file.write('epsengy      ! energy criterion (default:1e-4)\n')
+        file.write('  1e-2\n\n')
+        file.write('epspot      ! KS potential criterion (default:1e-6)\n')
         file.write('  1e-4\n\n')
         file.write('maxscl       ! max scf loop\n')
         file.write('  100\n\n')
@@ -111,7 +124,7 @@ class init(dftstr):
         # collecing all input infomation ----------------
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
-        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix,'on')
+        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         if type(atom[0])==str:
             atom=[ self.__grep__(ptable,atn)[0] for atn in atom]          
         # convert atomic name format to atomic number format

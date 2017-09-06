@@ -14,7 +14,7 @@ class init(dftstr):
         # collecing all input infomation ----------------
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
-        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix,'on')
+        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         klabel, kpath=self.getkpf(self.wkdir,prefix) 
         kdiv=self.kdiv(a_vec,kpath,kdense)
         if type(atom[0])==str:
@@ -26,27 +26,23 @@ class init(dftstr):
         # generate pw.scf.in file
         file=open(self.wkdir+'pw.scf.in','w')
         file.write('&CONTROL\n')
-        file.write('  ! you must keep verbosity=\'high\' to output band structure!\n')
         file.write('  title = \'{0}\',\n'.format(prefix))
         file.write('  calculation = \'scf\',\n')
         file.write('  restart_mode = \'from_scratch\' ,\n')
         file.write('  outdir = \'./outdir\',\n')
         file.write('  pseudo_dir = \'./\' ,\n')
         file.write('  prefix = \'pwscf\' ,\n')
-        file.write('  verbosity = \'high\',\n')
+        file.write('  verbosity = \'high\',  ! must use \'high\' to print bands\n')
         file.write('  wf_collect = .true. ,\n')
         file.write('  max_seconds =  21000 ,\n')
         file.write('/\n')
         file.write('&SYSTEM\n')
-        file.write('  ! ecutwfc should > 30 for uspp/paw, > 40 for ncpp\n')
-        file.write('  ! ecutrho should 4*ecutwfc for ncpp/paw, 10*ecutwfc for uspp\n')
-        file.write('  ! If DFT+U, use eV for U and J\n')
         file.write('  ibrav = 0,\n')
         file.write('  celldm(1) = 1.89,\n')
         file.write('  ntyp = {0} ,\n'.format(len(spec)))
         file.write('  nat = {0} ,\n'.format(len(atom)))
-        file.write('  ecutwfc = 33 , \n')
-        file.write('  ecutrho = 330 , \n')
+        file.write('  ecutwfc = 33 ,  ! > 30 for uspp/paw, >40 for ncpp\n')
+        file.write('  ecutrho = 330 , ! 4*ecutwfc for paw/ncpp, 10*ecutwfc for uspp\n')
         file.write('  occupations = \'smearing\' ,\n')
         file.write('  degauss = 0.02 ,\n')
         if (soc is 'on'):
@@ -63,12 +59,12 @@ class init(dftstr):
             file.write('  lda_plus_u = .true. \n')
             if (soc is 'off'):
                 file.write('  lda_plus_u_kind = 0\n')
-                [file.write('  Hubbard_U({0}) = 0.0\n'.format(n+1)) for n in range(0,len(spec))]
-                [file.write('  Hubbard_J0({0}) = 0.0\n'.format(n+1)) for n in range(0,len(spec))]            
+                [file.write('  Hubbard_U({0}) = 0.0    ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_J0({0}) = 0.0   ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]            
             elif (soc is 'on'):
                 file.write('  lda_plus_u_kind = 1\n')            
-                [file.write('  Hubbard_U({0}) = 0.0\n'.format(n+1)) for n in range(0,len(spec))]
-                [file.write('  Hubbard_J(1,{0}) = 0.0\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_U({0}) = 0.0    ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_J(1,{0}) = 0.0  ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
         file.write('/\n')
         file.write('&ELECTRONS\n')
         file.write('  electron_maxstep = 100,\n')
@@ -98,11 +94,8 @@ class init(dftstr):
         ln=self.grep(flines,'calculation = ')
         flines[ln[0]]='  calculation = \'bands\'\n'
         
-        ln=self.grep(flines,'! ecutwfc should')
-        flines[ln[0]]='  ! keep all varialble the same as pw.scf.in\n'
-        
-        del flines[self.grep(flines,'! ecutrho should')[0]] 
-        del flines[self.grep(flines,'! If DFT+U')[0]]
+        ln=self.grep(flines,'&SYSTEM')
+        flines.insert(ln[0]+1,'  ! keep all varialble the same as pw.scf.in\n')
         
         ln=self.grep(flines,'K_POINTS')
         flines=flines[0:ln[0]]
@@ -158,9 +151,8 @@ class init(dftstr):
         # generate pw.relax.in file
         file=open(self.wkdir+'pw.relax.in','w')
         file.write('&CONTROL\n')
-        file.write('  ! set calculation to \'relax\' if want cell fixed\n')
         file.write('  title = \'{0}\',\n'.format(prefix))
-        file.write('  calculation = \'vc-relax\',\n')
+        file.write('  calculation = \'vc-relax\', ! set to \'relax\' if want cell fixed\n')
         file.write('  restart_mode = \'from_scratch\' ,\n')
         file.write('  outdir = \'./outdir\',\n')
         file.write('  pseudo_dir = \'./\' ,\n')
@@ -175,23 +167,20 @@ class init(dftstr):
         file.write('  max_seconds =  21000 ,\n')
         file.write('/\n')
         file.write('&SYSTEM\n')
-        file.write('  ! ecutwfc should > 30 for uspp/paw, > 40 for ncpp\n')
-        file.write('  ! ecutrho should 4*ecutwfc for ncpp/paw, 10*ecutwfc for uspp\n')
         file.write('  ibrav = 0,\n')
         file.write('  celldm(1) = 1.89,\n')
         file.write('  ntyp = {0} ,\n'.format(len(spec)))
         file.write('  nat = {0} ,\n'.format(len(atom)))
-        file.write('  ecutwfc = 33 , \n')
-        file.write('  ecutrho = 330 , \n')
+        file.write('  ecutwfc = 33 , ! > 30 for uspp/paw, >40 for ncpp\n')
+        file.write('  ecutrho = 330 ,! 4*ecutwfc if ncpp/paw, 10*ecutwfc if uspp \n')
         file.write('  occupations = \'smearing\' ,\n')
         file.write('  degauss = 0.02 ,\n')
         file.write('  nspin = 1,\n')
         file.write('/\n')
         file.write('&CELL\n')
-        file.write('  ! check cell_dofree is what you want !\n')
         file.write('  cell_dynamics = \'bfgs\' ,\n')
         file.write('  press_conv_thr = 0.5 ,\n')
-        file.write('  cell_dofree = \'all\' ,\n')
+        file.write('  cell_dofree = \'all\' , ! check if you want constraints\n')
         file.write('/\n')
         file.write('&IONS\n')
         file.write('  ion_dynamics = \'bfgs\'\n')
