@@ -27,44 +27,57 @@ class init(dftstr):
         file=open(self.wkdir+'pw.scf.in','w')
         file.write('&CONTROL\n')
         file.write('  title = \'{0}\',\n'.format(prefix))
+        file.write('  prefix = \'pwscf\' ,\n')
         file.write('  calculation = \'scf\',\n')
         file.write('  restart_mode = \'from_scratch\' ,\n')
         file.write('  outdir = \'./outdir\',\n')
-        file.write('  pseudo_dir = \'./\' ,\n')
-        file.write('  prefix = \'pwscf\' ,\n')
-        file.write('  verbosity = \'high\',  ! must use \'high\' to print bands\n')
+        file.write('  pseudo_dir = \'./\' ,                 ! pseudopotential folder\n')
+        file.write('  verbosity = \'high\',                 ! must use \'high\' to print bands\n')
         file.write('  wf_collect = .true. ,\n')
         file.write('  max_seconds =  21000 ,\n')
         file.write('/\n')
         file.write('&SYSTEM\n')
+        file.write('  ! -- < basic parameters > --\n')
         file.write('  ibrav = 0,\n')
         file.write('  celldm(1) = 1.89,\n')
         file.write('  ntyp = {0} ,\n'.format(len(spec)))
         file.write('  nat = {0} ,\n'.format(len(atom)))
-        file.write('  ecutwfc = 33 ,  ! > 30 for uspp/paw, >40 for ncpp\n')
-        file.write('  ecutrho = 330 , ! 4*ecutwfc for paw/ncpp, 10*ecutwfc for uspp\n')
+        file.write('  ecutwfc = 33 ,                      ! > 30 for uspp/paw, >40 for ncpp\n')
+        file.write('  ecutrho = 330 ,                     ! 4*ecutwfc for paw/ncpp, 10*ecutwfc for uspp\n')
         file.write('  occupations = \'smearing\' ,\n')
         file.write('  degauss = 0.02 ,\n')
+        file.write('  ! -- < spin wavefunctions > --\n')
         if (soc is 'on'):
             file.write('  nspin = 4,\n')
             file.write('  noncolin = .true. ,\n')
             file.write('  lspinorb = .true. ,\n')
+            file.write('  starting_spin_angle = .false.       ! whether use soc-wf as initial wf\n')
         elif (soc is 'off') and (mag is 'on'):
             file.write('  nspin = 2,\n')
         elif (soc is 'off') and (mag is 'off'):
             file.write('  nspin = 1,\n')
         if (mag is 'on'):
-            [file.write('  starting_magnetization({0}) = 0.0,\n'.format(n+1)) for n in range(0,len(spec))]
+            file.write('  ! -- < magnetic constrains > --\n')
+            file.write('  constrained_magnetization = \'none\'  ! constrain scheme\n')
+            file.write('  lambda = 1.0                        ! constraint parameters, 0~1000\n')   
+            file.write('  tot_magnetization=-1                ! major-s - minor-s (LSDA) > 0, if constrained_magnetization=\'total\'\n')
+            file.write('  ! -- < initial moments > --\n')
+            for n in range(0,len(spec)):
+                file.write('  starting_magnetization({0}) = 0.0,    ! -1~+1, % of polar-valence-e\n'.format(n+1))
+                if (soc is 'on'):
+                    file.write('  angle1({0}) = 0.0,                    ! angle between m and z\n'.format(n+1))
+                    file.write('  angle2({0}) = 0.0,                    ! angle between m on x-y plane and x\n'.format(n+1))
         if (dftu is 'on'):
+            file.write('  ! -- < DFT+U parameters > --\n')
             file.write('  lda_plus_u = .true. \n')
             if (soc is 'off'):
                 file.write('  lda_plus_u_kind = 0\n')
-                [file.write('  Hubbard_U({0}) = 0.0    ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
-                [file.write('  Hubbard_J0({0}) = 0.0   ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]            
+                [file.write('  Hubbard_U({0}) = 0.0                  ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_J0({0}) = 0.0                 ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]            
             elif (soc is 'on'):
                 file.write('  lda_plus_u_kind = 1\n')            
-                [file.write('  Hubbard_U({0}) = 0.0    ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
-                [file.write('  Hubbard_J(1,{0}) = 0.0  ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_U({0}) = 0.0                  ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
+                [file.write('  Hubbard_J(1,{0}) = 0.0                ! (eV)\n'.format(n+1)) for n in range(0,len(spec))]
         file.write('/\n')
         file.write('&ELECTRONS\n')
         file.write('  electron_maxstep = 100,\n')
@@ -74,7 +87,7 @@ class init(dftstr):
         file.write('/\n')
         file.write('ATOMIC_SPECIES\n')
         for spec_n in spec:
-            file.write('    %2s     1.000   PSP_NAME.upf\n' % ptable[spec_n]) 
+            file.write('    %2s     1.000   PSP_NAME.upf       ! UPF file\n' % ptable[spec_n]) 
         file.write('CELL_PARAMETERS alat\n')
         for n in range(0,3):
             file.write('    %12.8f %12.8f %12.8f\n' % tuple(a_vec[n,:].tolist()))
@@ -224,7 +237,7 @@ class postproc(dftpp):
         by this class is also put here. 
     
     **** METHODS ****
-    __kdiv_qe__(self,kdiv)
+    _kdiv_qe(self,kdiv)
         * convert kdiv from qe format to DFTtoolbox format
         => [kdiv]: kdiv used in QE input file
     band_read(self,Ef,spin=1,bandat='bands.dat')
@@ -328,7 +341,7 @@ class postproc(dftpp):
             wkdir=wkdir+'/'
         self.wkdir=wkdir
         
-    def __kdiv_qe__(self,kdiv):
+    def _kdiv_qe(self,kdiv):
         # convert kdiv from QE format to postprocess format
         if kdiv=='defaut':
             kdiv_eq='default'
@@ -390,7 +403,7 @@ class postproc(dftpp):
         band=np.load(self.wkdir+'band.npz')
 
         dftpp.band_plot(self,band['spin'],band['Ek'],\
-        0,self.__kdiv_qe__(kdiv),klabel,Ebound,lw,fontsize,self.wkdir)
+        0,self._kdiv_qe(kdiv),klabel,Ebound,lw,fontsize,self.wkdir)
         
     def fatband_read(self,Ef,projout='projwfc.fat.out',projprefix='fatband'):
         print('fatband_read start ...')
@@ -560,12 +573,12 @@ class postproc(dftpp):
             
         # plot band stucture
         dftpp.band_plot(self,1,fatband['Ek'],\
-        0,self.__kdiv_qe__(kdiv),klabel,Ebound,2,fontsize)
+        0,self._kdiv_qe(kdiv),klabel,Ebound,2,fontsize)
         
         # plot fatband structure
         dftpp.fatband_plot(self,fatband['Ek'],fatband['Ek_weight'],0,\
         fatband['state_info'],self.state_grp_trans(fatband['state_info'],state_grp),\
-        self.__kdiv_qe__(kdiv),klabel,Ebound,ini_fig_num,marker_size,colorcode,fontsize,\
+        self._kdiv_qe(kdiv),klabel,Ebound,ini_fig_num,marker_size,colorcode,fontsize,\
         self.wkdir)
     
     def pdos_read(self,Ef):

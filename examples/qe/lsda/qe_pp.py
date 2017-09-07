@@ -1,7 +1,7 @@
 from DFTtoolbox.qe import postproc
 import os
 # Parameter ========================================================
-run_task=[1,2,3,4]
+run_task=[1,2,3,4,5,6]
 wkdir=os.path.dirname(os.path.realpath(__file__))
 # band_read & fatband_read
 Ef=13.6193

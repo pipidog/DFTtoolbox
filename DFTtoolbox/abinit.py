@@ -462,7 +462,7 @@ class postproc(dftpp):
             wkdir=wkdir+'/'
         self.wkdir=wkdir
         
-    def __kdiv_conv__(self,kdiv):
+    def _kdiv_conv(self,kdiv):
         # convert kdiv from abinit format to postprocess format
         if kdiv=='default':
             kdiv_conv='default'
@@ -541,7 +541,7 @@ class postproc(dftpp):
             kdiv[-1]=kdiv[-1]+1
             
         dftpp.band_plot(self,band['spin'].tolist(),band['Ek'],\
-        0,self.__kdiv_conv__(kdiv),klabel,Ebound,lw,fontsize,self.wkdir)
+        0,self._kdiv_conv(kdiv),klabel,Ebound,lw,fontsize,self.wkdir)
         
         shutil.move(self.wkdir+'band.png',self.wkdir+'band-DS'+str(dataset)+'.png')
         print(' => band plot saved to band-DS'+str(dataset)+'.png')
@@ -637,12 +637,12 @@ class postproc(dftpp):
         
         # plot band stucture
         dftpp.band_plot(self,1,fatband['Ek'],\
-        0,self.__kdiv_conv__(kdiv),klabel,Ebound,2,fontsize)    
+        0,self._kdiv_conv(kdiv),klabel,Ebound,2,fontsize)    
         
         # plot fatband     
         dftpp.fatband_plot(self,fatband['Ek'],fatband['Ek_weight'],0,\
         fatband['state_info'],self.state_grp_trans(fatband['state_info'],state_grp),\
-        self.__kdiv_conv__(kdiv),klabel,Ebound,ini_fig_num,marker_size,colorcode,fontsize\
+        self._kdiv_conv(kdiv),klabel,Ebound,ini_fig_num,marker_size,colorcode,fontsize\
         ,self.wkdir)
         
         # rename to output png file to abinit filename

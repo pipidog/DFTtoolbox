@@ -4,3 +4,5 @@
 # v1.3: bug: struct.getxst and related issues
         add: printxsf
         add: FSM in elk.py
+# v1.4: add: magnetic moments in qe.py
+        bug: __kdiv_xx__ has been removed
