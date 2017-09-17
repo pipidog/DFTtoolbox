@@ -6,3 +6,4 @@
         add: FSM in elk.py
 # v1.4: add: magnetic moments in qe.py
         bug: __kdiv_xx__ has been removed
+# v1.5: add: some initial parameters are optimized

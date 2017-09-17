@@ -164,7 +164,7 @@ class init(dftstr):
         file.write('vkloff       ! shift of grid\n')
         file.write('  0.5 0.5 0.5\n\n')
         file.write('nempty       ! add few empty states to imporve convergence\n')
-        file.write('  10\n\n')
+        file.write('  4\n\n')
         file.write('! convergence ===========\n')
         file.write('epsengy      ! energy criterion (default:1e-4)\n')
         file.write('  1e-4\n\n')
