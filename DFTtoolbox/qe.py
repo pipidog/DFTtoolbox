@@ -37,7 +37,7 @@ class init(dftstr):
         file.write('  max_seconds =  21000 ,\n')
         file.write('/\n')
         file.write('&SYSTEM\n')
-        file.write('  ! -- < basic parameters > --\n')
+        file.write('  ! < basic parameters > ===================\n')
         file.write('  ibrav = 0,\n')
         file.write('  celldm(1) = 1.89,\n')
         file.write('  ntyp = {0} ,\n'.format(len(spec)))
@@ -46,7 +46,7 @@ class init(dftstr):
         file.write('  ecutrho = 330 ,                     ! 4*ecutwfc for paw/ncpp, 10*ecutwfc for uspp\n')
         file.write('  occupations = \'smearing\' ,\n')
         file.write('  degauss = 0.02 ,\n')
-        file.write('  ! -- < spin wavefunctions > --\n')
+        file.write('  ! < spin wavefunctions > =================\n')
         if (soc is 'on'):
             file.write('  nspin = 4,\n')
             file.write('  noncolin = .true. ,\n')
@@ -57,18 +57,18 @@ class init(dftstr):
         elif (soc is 'off') and (mag is 'off'):
             file.write('  nspin = 1,\n')
         if (mag is 'on'):
-            file.write('  ! -- < magnetic constrains > --\n')
+            file.write('  ! < magnetic constrains > ================\n')
             file.write('  constrained_magnetization = \'none\'  ! constrain scheme\n')
             file.write('  lambda = 1.0                        ! constraint parameters, 0~1000\n')   
             file.write('  tot_magnetization=-1                ! major-s - minor-s (LSDA) > 0, if constrained_magnetization=\'total\'\n')
-            file.write('  ! -- < initial moments > --\n')
+            file.write('  ! < initial moments > ====================\n')
             for n in range(0,len(spec)):
                 file.write('  starting_magnetization({0}) = 0.0,    ! -1~+1, % of polar-valence-e\n'.format(n+1))
                 if (soc is 'on'):
                     file.write('  angle1({0}) = 0.0,                    ! angle between m and z\n'.format(n+1))
                     file.write('  angle2({0}) = 0.0,                    ! angle between m on x-y plane and x\n'.format(n+1))
         if (dftu is 'on'):
-            file.write('  ! -- < DFT+U parameters > --\n')
+            file.write('  ! < DFT+U parameters > ===================\n')
             file.write('  lda_plus_u = .true. \n')
             if (soc is 'off'):
                 file.write('  lda_plus_u_kind = 0\n')

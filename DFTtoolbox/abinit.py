@@ -16,7 +16,7 @@ class init(dftstr):
         #spec=sorted(tuple(set(atom)))         
         atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         klabel, kpath=self.getkpf(self.wkdir,prefix) 
-
+        
         # check if V<0, if yes, swap a1 and a2
         V=np.dot(np.cross(a_vec[0,:],a_vec[1,:]),a_vec[2,:])
         print('system volume={0} A^3'.format(V))
@@ -66,7 +66,6 @@ class init(dftstr):
         for n in range(0,len(atom)):
             file.write('  {0[0]:12.8f} {0[1]:12.8f} {0[2]:12.8f}  #  {1:>2s} ({2:>3d})\n'.\
                 format(sublat[n,:],ptable[atom[n]],(n+1)))
-            #file.write('%12.8f %12.8f %12.8f\n' % tuple(sublat[n,:].tolist()))
         file.write('\n')
         file.write('# Magnetism ======================================\n') 
         if mag=='on':
@@ -231,15 +230,17 @@ class init(dftstr):
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
         atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
-        if type(atom[0])==str:
-            atom=[ self.__grep__(ptable,atn)[0] for atn in atom]     
+        
         # check if V<0, if yes, swap a1 and a2
         V=np.dot(np.cross(a_vec[0,:],a_vec[1,:]),a_vec[2,:])
         print('system volume={0} A^3'.format(V))
         if V < 0:
             print('Warning: V<0, a1/b1 and a2/b2 swapped, else abinit will report error!')
             a_vec=a_vec[[1,0,2],:]
-            sublat=sublat[:,[1,0,2]]    
+            sublat=sublat[:,[1,0,2]]   
+
+        if type(atom[0])==str:
+            atom=[ self.__grep__(ptable,atn)[0] for atn in atom]             
         # convert atomic name format to atomic number format
         spec=[]
         [spec.append(at_n) for at_n in atom if spec.count(at_n)==0]
@@ -275,7 +276,7 @@ class init(dftstr):
             file.write('  %12.8f %12.8f %12.8f\n' % tuple(a_vec[n,:].tolist()))       
         file.write('xred                    # atom in reduced coordinates\n')    
         for n in range(0,len(atom)):
-            file.write('  {0[0]:12.8f} {0[0]:12.8f} {0[0]:12.8f}  #  {1:>2s} ({2:>3d})\n'.\
+            file.write('  {0[0]:12.8f} {0[1]:12.8f} {0[2]:12.8f}  #  {1:>2s} ({2:>3d})\n'.\
                 format(sublat[n,:],ptable[atom[n]],(n+1)))
         file.write('\n')
         file.write('# Plane Waves ================================\n')
