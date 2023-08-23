@@ -154,7 +154,7 @@ class init(dftstr):
         # collecing all input infomation ----------------
         ptable=self.ptable()
         #spec=sorted(tuple(set(atom)))         
-        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix,'on')
+        atom, a_vec, sublat=self.getxsf(self.wkdir,prefix)
         if type(atom[0])==str:
             atom=[ self.__grep__(ptable,atn)[0] for atn in atom]          
         # convert atomic name format to atomic number format
@@ -190,19 +190,19 @@ class init(dftstr):
         file.write('  degauss = 0.02 ,\n')
         file.write('  nspin = 1,\n')
         file.write('/\n')
-        file.write('&CELL\n')
-        file.write('  cell_dynamics = \'bfgs\' ,\n')
-        file.write('  press_conv_thr = 0.5 ,\n')
-        file.write('  cell_dofree = \'all\' , ! check if you want constraints\n')
-        file.write('/\n')
-        file.write('&IONS\n')
-        file.write('  ion_dynamics = \'bfgs\'\n')
-        file.write('/\n')
         file.write('&ELECTRONS\n')
         file.write('  electron_maxstep = 100,\n')
         file.write('  conv_thr = 1.D-5 ,\n')
         file.write('  mixing_beta = 0.7 ,\n')
-        file.write('  diagonalization = \'david\' ,\n')
+        file.write('  diagonalization = \'david\' ,\n')        
+        file.write('/\n')
+        file.write('&IONS\n')
+        file.write('  ion_dynamics = \'bfgs\'\n')
+        file.write('/\n')
+        file.write('&CELL\n')
+        file.write('  cell_dynamics = \'bfgs\' ,\n')
+        file.write('  press_conv_thr = 0.5 ,\n')
+        file.write('  cell_dofree = \'all\' , ! check if you want constraints\n')
         file.write('/\n')
         file.write('ATOMIC_SPECIES\n')
         for spec_n in spec:
@@ -513,7 +513,7 @@ class postproc(dftpp):
         with open(self.wkdir+projout,'r') as file:
             txt=[file.readline() for n in range(0,tot_state+100)]
         
-        if self.grep(txt,'(j=')!=[]:
+        if self.grep(txt,'m_j=')!=[]:
             SOC=1
         else:
             SOC=0
@@ -531,8 +531,8 @@ class postproc(dftpp):
                         s['num']=int(tmp[3])
                         s['spec']=tmp[4]
                         s['wfc']=int(tmp[7])
-                        s['j']=float(tmp[-3])
-                        s['l']=float(tmp[-2])
+                        s['l']=float(tmp[-3])
+                        s['j']=float(tmp[-2])
                         s['mj']=float(tmp[-1])             
                         state_info.append('{label:3d} => {spec:>2s}-{num:<2d} orb-{wfc:<2d} ({num:2d} / {l} / {j:3.1f} / {mj:+3.1f})\n'.format(**s))
                     elif SOC==0:
